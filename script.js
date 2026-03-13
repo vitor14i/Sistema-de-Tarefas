@@ -155,8 +155,9 @@ function incluirTarefa(nome, custo, dataLimite) {
   }
 
   const custoNum = Number(custo);
-  if (Number.isNaN(custoNum) || custoNum < 0) {
-    mostrarToast('Custo inválido!', 'danger');
+  const CUSTO_MAX = 9999999.99;
+  if (Number.isNaN(custoNum) || custoNum < 0 || custoNum > CUSTO_MAX) {
+    mostrarToast(`Custo inválido! (máx: R$ ${CUSTO_MAX.toLocaleString('pt-BR')})`, 'danger');
     return;
   }
 
@@ -192,8 +193,9 @@ function editarTarefa(id, novoNome, novoCusto, novaDataLimite) {
   }
 
   const custoNum = Number(novoCusto);
-  if (Number.isNaN(custoNum) || custoNum < 0) {
-    mostrarToast('Custo inválido!', 'danger');
+  const CUSTO_MAX = 9999999.99;
+  if (Number.isNaN(custoNum) || custoNum < 0 || custoNum > CUSTO_MAX) {
+    mostrarToast(`Custo inválido! (máx: R$ ${CUSTO_MAX.toLocaleString('pt-BR')})`, 'danger');
     return;
   }
 
@@ -264,6 +266,11 @@ function editarTarefaPrompt(id) {
   const modalEl = document.getElementById('modalEditar');
   const modal = new bootstrap.Modal(modalEl);
   modal.show();
+  // Foca no campo nome ao abrir modal
+  setTimeout(() => {
+    const nomeInput = document.getElementById('editarNome');
+    if (nomeInput) nomeInput.focus();
+  }, 300);
 
   document.getElementById('btn-confirmar-editar').onclick = () => {
     const novoNome = document.getElementById('editarNome').value.trim();
@@ -327,7 +334,10 @@ function limparCampos() {
   const nomeInput = document.getElementById('inputNome');
   const custoInput = document.getElementById('inputCusto');
   const dataInput = document.getElementById('inputDataLimite');
-  if (nomeInput) nomeInput.value = '';
+  if (nomeInput) {
+    nomeInput.value = '';
+    nomeInput.focus(); // Foca ao limpar
+  }
   if (custoInput) custoInput.value = '';
   if (dataInput) dataInput.value = '';
 }
